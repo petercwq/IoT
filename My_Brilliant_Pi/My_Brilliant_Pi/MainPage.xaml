@@ -8,25 +8,54 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.5*"/>
-            <ColumnDefinition Width="0.5*"/>
-        </Grid.ColumnDefinitions>
-        <StackPanel  Grid.ColumnSpan="2" Margin="10,0,10,20" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name="btn1" Content="Start Capturing" Click="startCapture" Margin="10,10,0,0"></Button>
-            <Button x:Name="btn2" Content="End Capturing" Click="stopCapture" Margin="10, 10,0,0"/>
-            <Button x:Name="btn3" Content="Play Captured Video" Click="playVideo" Margin="10, 10, 0,0"/>
+
+        <TextBlock Grid.Row="0" x:Name="pageTitle" Text="Web Camera Sample" Style="{StaticResource HeaderTextBlockStyle}" 
+                        IsHitTestVisible="false" TextWrapping="NoWrap" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <StackPanel Grid.Row="1" x:Name="ContentRoot" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Margin="12,0,0,0">
+            <Button x:Name="video_init" Content="Initialize Audio/Video" Click="initVideo_Click" HorizontalAlignment="Left" Margin="0,0,30,20" Width="180"/>
+            <Button x:Name="audio_init" Content="Initialize Audio Only" Click="initAudioOnly_Click" Margin="0,0,30,20" Width="120"/>
+            <Button x:Name="cleanup" Content="Close Camera" Click="cleanup_Click" Margin="0,0,30,20" Width="120"/>
         </StackPanel>
 
-        <TextBlock Grid.Row="1" Text="Video Preview Window:" Margin="5" TextAlignment="Center"/>
-        <CaptureElement Grid.Row="2" Name="capturePreview" Margin="10" VerticalAlignment="Center"/>
+        <StackPanel Grid.Row="2" x:Name="ContentRootActions" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Margin="12,0,12,0">
+            <Button x:Name="takePhoto" Content="Take Photo" Click="takePhoto_Click" Margin="0,0,30,0" Width="120" IsEnabled="False" Visibility="Collapsed"/>
+            <Button x:Name="recordVideo" Content="Start Video Record" Click="recordVideo_Click" Margin="0,0,30,0" Width="150" IsEnabled="False" Visibility="Collapsed"/>
+            <Button x:Name="recordAudio" Content="Start Audio Record" Click="recordAudio_Click" Margin="0,0,0,0" Width="150" IsEnabled="False" Visibility="Collapsed"/>
+        </StackPanel>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Name="PreviewTitle" Grid.Row="0" Grid.Column="0" Text="Preview" HorizontalAlignment="Center" Margin="5" Visibility="Visible"/>
+            <CaptureElement x:Name="previewElement" Grid.Row="1" Grid.Column="0" Margin="2" VerticalAlignment="Center" Visibility="Visible"/>
+            <TextBlock Name="ImageTitle" Grid.Row="0" Grid.Column="1" Text="Last captured photo" HorizontalAlignment="Center" Margin="5" Visibility="Visible"/>
+            <Image x:Name="captureImage" Grid.Row="1" Grid.Column="1" Margin="2" VerticalAlignment="Center" Stretch="Uniform" Visibility="Visible"/>
+            <TextBlock Name="VideoTitle" Grid.Row="0" Grid.Column="2" Text="Last Recorded Video" HorizontalAlignment="Center" Margin="5" Visibility="Visible"/>
+            <MediaElement x:Name="playbackElement" Grid.Row="1" Grid.Column="2" Margin="2" VerticalAlignment="Center" Visibility="Visible"/>
+            <!--<TextBlock  Grid.Row="0" Grid.Column="3" Text='Last Recorded Audio' Height='30' Margin='10,20,0,0'/>-->
+            <MediaElement  x:Name='playbackElement3' Grid.Row="1" Grid.Column="2" Width="0"  Height="0"/>
+        </Grid>
 
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="Video Review Window" Margin="5" TextAlignment="Center"/>
-        <MediaElement Grid.Row="2" Grid.Column="1" Name="media" AutoPlay="True" AreTransportControlsEnabled="True" Margin="10" VerticalAlignment="Center"/>
+        <TextBlock x:Name="status" Grid.Row="5" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" 
+			ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
     </Grid>
 </Page>

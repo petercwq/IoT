@@ -15,9 +15,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-using Windows.Media.Capture;
-using System.Threading.Tasks;
-
 namespace My_Brilliant_Pi
 {
     /// <summary>
@@ -25,11 +22,6 @@ namespace My_Brilliant_Pi
     /// </summary>
     sealed partial class App : Application
     {
-        public MediaCapture MediaCapture { get; set; }
-        public CaptureElement PreviewElement { get; set; }
-        public bool IsRecording { get; set; }
-        public bool IsPreviewing { get; set; }
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -53,6 +45,12 @@ namespace My_Brilliant_Pi
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+            this.UnhandledException += (s, ee) =>
+            {
+
+                System.Diagnostics.Debug.WriteLine(ee.Message);
+            };
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -63,7 +61,6 @@ namespace My_Brilliant_Pi
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
-
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Load state from previously suspended application
@@ -108,30 +105,7 @@ namespace My_Brilliant_Pi
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
-            await CleanupCaptureResources();
             deferral.Complete();
-        }
-
-        public async Task CleanupCaptureResources()
-        {
-            if (IsRecording && MediaCapture != null)
-            {
-                await MediaCapture.StopRecordAsync();
-                IsRecording = false;
-            }
-            if (IsPreviewing && MediaCapture != null)
-            {
-                await MediaCapture.StopPreviewAsync();
-                IsPreviewing = false;
-            }
-            if (MediaCapture != null)
-            {
-                if (PreviewElement != null)
-                {
-                    PreviewElement.Source = null;
-                }
-                MediaCapture.Dispose();
-            }
         }
     }
 }
